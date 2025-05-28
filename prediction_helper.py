@@ -1,12 +1,12 @@
 import pandas as pd
 import joblib
 
-model_young = joblib.load("artifacts/model_young.joblib")
-model_rest = joblib.load("artifacts/model_rest.joblib")
-scaler_young = joblib.load("artifacts/scaler_young.joblib")
-scaler_rest = joblib.load("artifacts/scaler_rest.joblib")
+model_young = joblib.load("artifacts/model.joblib")
+model_rest = joblib.load("artifacts/model_older.joblib")
+scaler_young = joblib.load("artifacts/scaler.joblib")
+scaler_rest = joblib.load("artifacts/scaler_older.joblib")
 
-def calculate_normalized_risk(medical_history):
+def calculate_normalised_risk(medical_history):
     risk_scores = {
         "diabetes": 6,
         "heart disease": 8,
@@ -25,14 +25,14 @@ def calculate_normalized_risk(medical_history):
     min_score = 0  # Since the minimum score is always 0
 
     # Normalize the total risk score
-    normalized_risk_score = (total_risk_score - min_score) / (max_score - min_score)
+    normalised_risk_score = (total_risk_score - min_score) / (max_score - min_score)
 
-    return normalized_risk_score
+    return normalised_risk_score
 
 def preprocess_input(input_dict):
     # Define the expected columns and initialize the DataFrame with zeros
     expected_columns = [
-        'age', 'number_of_dependants', 'income_lakhs', 'insurance_plan', 'genetical_risk', 'normalized_risk_score',
+        'age', 'number_of_dependants', 'income_lakhs', 'insurance_plan', 'genetical_risk', 'normalised_risk_score',
         'gender_Male', 'region_Northwest', 'region_Southeast', 'region_Southwest', 'marital_status_Unmarried',
         'bmi_category_Obesity', 'bmi_category_Overweight', 'bmi_category_Underweight', 'smoking_status_Occasional',
         'smoking_status_Regular', 'employment_status_Salaried', 'employment_status_Self-Employed'
@@ -85,7 +85,7 @@ def preprocess_input(input_dict):
             df['genetical_risk'] = value
 
     # Assuming the 'normalized_risk_score' needs to be calculated based on the 'age'
-    df['normalized_risk_score'] = calculate_normalized_risk(input_dict['Medical History'])
+    df['normalised_risk_score'] = calculate_normalised_risk(input_dict['Medical History'])
     df = handle_scaling(input_dict['Age'], df)
 
     return df
